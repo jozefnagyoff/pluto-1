@@ -21,9 +21,7 @@
 #include "../include/net/udp.h"
 #include "../include/net/tcp.h"
 
-
 #define GRAPHICSMODE
-
 
 using namespace pluto;
 using namespace pluto::common;
@@ -32,7 +30,8 @@ using namespace pluto::hardwarecommunication;
 using namespace pluto::gui;
 using namespace pluto::net;
 
-void printf(char *str) {
+void printf(char *str)
+{
     uint16_t *VideoMemory = (uint16_t *) 0xb8000;
 
     static uint8_t x = 0, y = 0;
@@ -65,7 +64,8 @@ void printf(char *str) {
     }
 }
 
-void printfHex(uint8_t key) {
+void printfHex(uint8_t key)
+{
     char *foo = "00";
     char *hex = "0123456789ABCDEF";
     foo[0] = hex[(key >> 4) & 0xF];
@@ -73,12 +73,14 @@ void printfHex(uint8_t key) {
     printf(foo);
 }
 
-void printfHex16(uint16_t key) {
+void printfHex16(uint16_t key)
+{
     printfHex((key >> 8) & 0xFF);
     printfHex(key & 0xFF);
 }
 
-void printfHex32(uint32_t key) {
+void printfHex32(uint32_t key)
+{
     printfHex((key >> 24) & 0xFF);
     printfHex((key >> 16) & 0xFF);
     printfHex((key >> 8) & 0xFF);
@@ -142,16 +144,19 @@ public:
 };
 
 
-void sysprintf(char *str) {
+void sysprintf(char *str)
+{
     asm("int $0x80" : : "a" (4), "b" (str));
 }
 
-void taskA() {
+void taskA()
+{
     while (true)
         sysprintf("A");
 }
 
-void taskB() {
+void taskB()
+{
     while (true)
         sysprintf("B");
 }
@@ -161,16 +166,16 @@ typedef void (*constructor)();
 
 extern "C" constructor start_ctors;
 extern "C" constructor end_ctors;
-extern "C" void callConstructors() {
+extern "C" void callConstructors()
+{
     for (constructor *i = &start_ctors; i != &end_ctors; i++)
         (*i)();
 }
 
 
 
-extern "C" void kernelMain(const void *multiboot_structure, uint32_t /*multiboot_magic*/) {
-    printf("PLUTO BOOTED SUCCESSFULLY!\n");
-
+extern "C" void kernelMain(const void *multiboot_structure, uint32_t /*multiboot_magic*/)
+{
     GlobalDescriptorTable gdt;
 
 
